@@ -25,8 +25,10 @@ source_group("Source" FILES ${SOURCES})
 source_group("Cross Shaders" FILES ${SHADER_CROSS_SOURCES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE "Source/src/")
-target_include_directories(${PROJECT_NAME} PRIVATE "shaders/")
 target_include_directories(${PROJECT_NAME} PRIVATE "Source/externalSrc/")
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/Source/deps/stb_image/include")
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/Source/deps/tinyobjloader/include")
+
 
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
 target_link_libraries(${PROJECT_NAME} PRIVATE stb_image)

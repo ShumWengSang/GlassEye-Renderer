@@ -749,8 +749,8 @@ class HelloTriangleApplication {
   }
 
   void createGraphicsPipeline() {
-    auto vertShaderCode = readFile("shaders/vert.spv");
-    auto fragShaderCode = readFile("shaders/frag.spv");
+    auto vertShaderCode = readFile("Assets/Shaders/vert.spv");
+    auto fragShaderCode = readFile("Assets/Shaders/frag.spv");
 
     VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
     VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
@@ -1937,8 +1937,8 @@ class HelloTriangleApplication {
   VkDeviceMemory depthImageMemory;
   VkImageView depthImageView;
 
-  const std::string MODEL_PATH = "models/viking_room.obj";
-  const std::string TEXTURE_PATH = "textures/viking_room.png";
+  const std::string MODEL_PATH = "Assets/Models/viking_room.obj";
+  const std::string TEXTURE_PATH = "Assets/Textures/viking_room.png";
 
   VkSampleCountFlagBits msaaSamples = VK_SAMPLE_COUNT_1_BIT;
   VkImage colorImage;
