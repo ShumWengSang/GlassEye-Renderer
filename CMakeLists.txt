@@ -4,7 +4,7 @@ set(PROJECT_NAME GlassEye)
 
 project(${PROJECT_NAME})
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(Source/deps/)
 

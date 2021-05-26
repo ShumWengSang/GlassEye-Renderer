@@ -8,7 +8,8 @@ My own implementation of a Vulkan renderer.
 
 # Dependancies
 
-Uses C++ 20. MSVC currently supports the most C++ 20 features out of all compilers
+~~Uses C++ 20. MSVC currently supports the most C++ 20 features out of all compilers~~
+Reverted to C++17 as C++ 20 support is not mature enough.
 
 ## All of these libraries are embedded into the project for stability
 
@@ -19,3 +20,7 @@ Uses C++ 20. MSVC currently supports the most C++ 20 features out of all compile
 - GLFW
 - Luna SDK (Vulkan)
 - ImGui
+
+## You will need to download these yourself
+
+- Vulkan SDK (Lunar) [Vulkan Development Environment Site](https://vulkan-tutorial.com/Development_environment)
