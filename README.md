@@ -4,7 +4,7 @@ My own implementation of a Vulkan renderer.
 
 # Requirements
 
-> = CMake 3.17 C++ 20 (project uses MSVC with CLion)
+> \>= CMake 3.17 C++ 20 (project uses MSVC with CLion)
 
 # Dependancies
 
