@@ -1,6 +1,6 @@
 # GlassEye-Renderer
 
-My own implementation of a Vulkan renderer.
+My own implementation of a Vulkan renderer. I hope to bring this to a multithreaded game engine someday.
 
 # Requirements
 
