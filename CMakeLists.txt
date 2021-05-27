@@ -52,6 +52,16 @@ IF (NOT Vulkan_FOUND)
 ENDIF ()
 target_link_libraries(${PROJECT_NAME} PRIVATE Vulkan::Vulkan)
 
+# spdlog
+find_package(spdlog REQUIRED)
+target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog)
+
+if(MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
+else()
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic -Werror)
+endif()
+
 # Precompiled header
 target_precompile_headers(${PROJECT_NAME} PRIVATE "Source/src/stdafx.cpp")
 

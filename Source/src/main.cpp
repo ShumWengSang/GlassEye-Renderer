@@ -1,4 +1,3 @@
-#include <entt/entt.hpp>
 
 struct Vertex {
   glm::vec3 pos;
@@ -323,6 +322,8 @@ class HelloTriangleApplication {
                 VkDebugUtilsMessageTypeFlagsEXT messageType,
                 const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
                 void* pUserData) {
+    UNREFERENCED_PARAMETER(pUserData);
+    UNREFERENCED_PARAMETER(messageType);
     if (messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
       // Message is important enough to show
       std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
@@ -335,7 +336,7 @@ class HelloTriangleApplication {
     std::ifstream file(filename, std::ios::ate | std::ios::binary);
 
     if (!file.is_open()) {
-      throw std::runtime_error("failed to open file!");
+      throw std::runtime_error("failed to open file " + filename);
     }
 
     size_t fileSize = (size_t)file.tellg();
@@ -351,6 +352,8 @@ class HelloTriangleApplication {
                                         int height) {
     auto app = reinterpret_cast<HelloTriangleApplication*>(
         glfwGetWindowUserPointer(window));
+    UNREFERENCED_PARAMETER(width);
+    UNREFERENCED_PARAMETER(height);
     app->framebufferResized = true;
   }
 
@@ -390,9 +393,9 @@ class HelloTriangleApplication {
     std::vector<VkPhysicalDevice> devices(deviceCount);
     vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
 
-    for (const auto& device : devices) {
-      if (isDeviceSuitable(device)) {
-        physicalDevice = device;
+    for (const auto& l_device : devices) {
+      if (isDeviceSuitable(l_device)) {
+        physicalDevice = l_device;
         msaaSamples = getMaxUsableSampleCount();
         break;
       }
@@ -403,70 +406,70 @@ class HelloTriangleApplication {
     }
   }
 
-  bool isDeviceSuitable(VkPhysicalDevice device) {
+  bool isDeviceSuitable(VkPhysicalDevice l_device) {
     VkPhysicalDeviceProperties deviceProperties;
-    vkGetPhysicalDeviceProperties(device, &deviceProperties);
+    vkGetPhysicalDeviceProperties(l_device, &deviceProperties);
     VkPhysicalDeviceFeatures deviceFeatures;
-    vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
+    vkGetPhysicalDeviceFeatures(l_device, &deviceFeatures);
 
-    QueueFamilyIndices indices = findQueueFamilies(device);
-    bool extensionsSupported = checkDeviceExtensionSupport(device);
+    QueueFamilyIndices l_indices = findQueueFamilies(l_device);
+    bool extensionsSupported = checkDeviceExtensionSupport(l_device);
 
     bool swapChainAdequate = false;
     if (extensionsSupported) {
-      SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device);
+      SwapChainSupportDetails swapChainSupport = querySwapChainSupport(l_device);
       swapChainAdequate = !swapChainSupport.formats.empty() &&
           !swapChainSupport.presentModes.empty();
     }
 
     VkPhysicalDeviceFeatures supportedFeatures;
-    vkGetPhysicalDeviceFeatures(device, &supportedFeatures);
+    vkGetPhysicalDeviceFeatures(l_device, &supportedFeatures);
 
     return deviceProperties.deviceType ==
         VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU &&
-        indices.isComplete() && extensionsSupported && swapChainAdequate &&
+        l_indices.isComplete() && extensionsSupported && swapChainAdequate &&
         supportedFeatures.samplerAnisotropy;
   }
 
-  QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) {
-    QueueFamilyIndices indices;
+  QueueFamilyIndices findQueueFamilies(VkPhysicalDevice l_device) {
+    QueueFamilyIndices l_indices;
     // Logic to find graphics queue family
 
     uint32_t queueFamilyCount = 0;
-    vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount,
+    vkGetPhysicalDeviceQueueFamilyProperties(l_device, &queueFamilyCount,
                                              nullptr);
 
     std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-    vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount,
+    vkGetPhysicalDeviceQueueFamilyProperties(l_device, &queueFamilyCount,
                                              queueFamilies.data());
 
     // Find at least one queue that supports graphics bit
     int i = 0;
     for (const auto& queueFamily : queueFamilies) {
       if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
-        indices.graphicsFamily = i;
+        l_indices.graphicsFamily = i;
       }
 
       VkBool32 presentSupport = false;
-      vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);
+      vkGetPhysicalDeviceSurfaceSupportKHR(l_device, i, surface, &presentSupport);
       if (presentSupport) {
-        indices.presentFamily = i;
+        l_indices.presentFamily = i;
       }
 
-      if (indices.isComplete()) break;
+      if (l_indices.isComplete()) break;
 
       i++;
     }
 
-    return indices;
+    return l_indices;
   }
 
   void createLogicalDevice() {
-    QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
+    QueueFamilyIndices l_indices = findQueueFamilies(physicalDevice);
 
     std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
-    std::set<uint32_t> uniqueQueueFamilies = {indices.graphicsFamily.value(),
-                                              indices.presentFamily.value()};
+    std::set<uint32_t> uniqueQueueFamilies = {l_indices.graphicsFamily.value(),
+                                              l_indices.presentFamily.value()};
 
     float queuePriority = 1.0f;
     for (uint32_t queueFamily : uniqueQueueFamilies) {
@@ -505,8 +508,8 @@ class HelloTriangleApplication {
       throw std::runtime_error("failed to create logical device!");
     }
 
-    vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
-    vkGetDeviceQueue(device, indices.presentFamily.value(), 0, &presentQueue);
+    vkGetDeviceQueue(device, l_indices.graphicsFamily.value(), 0, &graphicsQueue);
+    vkGetDeviceQueue(device, l_indices.presentFamily.value(), 0, &presentQueue);
   }
 
   void createSurface() {
@@ -516,13 +519,13 @@ class HelloTriangleApplication {
     }
   }
 
-  bool checkDeviceExtensionSupport(VkPhysicalDevice device) {
+  bool checkDeviceExtensionSupport(VkPhysicalDevice l_device) {
     uint32_t extensionCount;
-    vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount,
+    vkEnumerateDeviceExtensionProperties(l_device, nullptr, &extensionCount,
                                          nullptr);
 
     std::vector<VkExtensionProperties> availableExtensions(extensionCount);
-    vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount,
+    vkEnumerateDeviceExtensionProperties(l_device, nullptr, &extensionCount,
                                          availableExtensions.data());
 
     std::set<std::string> requiredExtensions(deviceExtensions.begin(),
@@ -534,27 +537,27 @@ class HelloTriangleApplication {
     return requiredExtensions.empty();
   }
 
-  SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device) {
+  SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice l_device) {
     SwapChainSupportDetails details;
-    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface,
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(l_device, surface,
                                               &details.capabilities);
     uint32_t formatCount;
-    vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount,
+    vkGetPhysicalDeviceSurfaceFormatsKHR(l_device, surface, &formatCount,
                                          nullptr);
 
     if (formatCount != 0) {
       details.formats.resize(formatCount);
-      vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount,
+      vkGetPhysicalDeviceSurfaceFormatsKHR(l_device, surface, &formatCount,
                                            details.formats.data());
     }
 
     uint32_t presentModeCount;
-    vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface,
+    vkGetPhysicalDeviceSurfacePresentModesKHR(l_device, surface,
                                               &presentModeCount, nullptr);
     if (presentModeCount != 0) {
       details.presentModes.resize(presentModeCount);
       vkGetPhysicalDeviceSurfacePresentModesKHR(
-          device, surface, &presentModeCount, details.presentModes.data());
+          l_device, surface, &presentModeCount, details.presentModes.data());
     }
     return details;
   }
@@ -628,11 +631,11 @@ class HelloTriangleApplication {
     createInfo.imageArrayLayers = 1;
     createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-    QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
-    uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(),
-                                     indices.presentFamily.value()};
+    QueueFamilyIndices l_indices = findQueueFamilies(physicalDevice);
+    uint32_t queueFamilyIndices[] = {l_indices.graphicsFamily.value(),
+                                     l_indices.presentFamily.value()};
 
-    if (indices.graphicsFamily != indices.presentFamily) {
+    if (l_indices.graphicsFamily != l_indices.presentFamily) {
       createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
       createInfo.queueFamilyIndexCount = 2;
       createInfo.pQueueFamilyIndices = queueFamilyIndices;
@@ -1478,7 +1481,7 @@ class HelloTriangleApplication {
     vkFreeMemory(device, stagingBufferMemory, nullptr);
   }
 
-  void createImage(uint32_t texWidth, uint32_t texHeight, uint32_t mipLevels,
+  void createImage(uint32_t texWidth, uint32_t texHeight, uint32_t localmipLevels,
                    VkSampleCountFlagBits numSamples, VkFormat format,
                    VkImageTiling tiling, VkImageUsageFlags usage,
                    VkMemoryPropertyFlags properties, VkImage& image,
@@ -1489,7 +1492,7 @@ class HelloTriangleApplication {
     imageInfo.extent.width = texWidth;
     imageInfo.extent.height = texHeight;
     imageInfo.extent.depth = 1;
-    imageInfo.mipLevels = mipLevels;
+    imageInfo.mipLevels = localmipLevels;
     imageInfo.arrayLayers = 1;
     imageInfo.format = format;
     imageInfo.tiling = tiling;
@@ -1556,7 +1559,8 @@ class HelloTriangleApplication {
 
   void transitionImageLayout(VkImage image, VkFormat format,
                              VkImageLayout oldLayout, VkImageLayout newLayout,
-                             uint32_t mipLevels) {
+                             uint32_t localmipLevels) {
+    UNREFERENCED_PARAMETER(format);
     VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
     VkImageMemoryBarrier barrier{};
@@ -1569,7 +1573,7 @@ class HelloTriangleApplication {
     barrier.image = image;
     barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     barrier.subresourceRange.baseMipLevel = 0;
-    barrier.subresourceRange.levelCount = mipLevels;
+    barrier.subresourceRange.levelCount = localmipLevels;
     barrier.subresourceRange.baseArrayLayer = 0;
     barrier.subresourceRange.layerCount = 1;
     barrier.srcAccessMask = 0;  // TODO
@@ -1630,7 +1634,7 @@ class HelloTriangleApplication {
 
   VkImageView createImageView(VkImage image, VkFormat format,
                               VkImageAspectFlags aspectFlags,
-                              uint32_t mipLevels) {
+                              uint32_t localmipLevels) {
     VkImageViewCreateInfo viewInfo{};
     viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     viewInfo.image = image;
@@ -1638,7 +1642,7 @@ class HelloTriangleApplication {
     viewInfo.format = format;
     viewInfo.subresourceRange.aspectMask = aspectFlags;
     viewInfo.subresourceRange.baseMipLevel = 0;
-    viewInfo.subresourceRange.levelCount = mipLevels;
+    viewInfo.subresourceRange.levelCount = localmipLevels;
     viewInfo.subresourceRange.baseArrayLayer = 0;
     viewInfo.subresourceRange.layerCount = 1;
 
@@ -1724,7 +1728,7 @@ class HelloTriangleApplication {
   }
 
   void generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth,
-                       int32_t texHeight, uint32_t mipLevels) {
+                       int32_t texHeight, uint32_t localmipLevels) {
     // Check if image format supports linear blitting
     VkFormatProperties formatProperties;
     vkGetPhysicalDeviceFormatProperties(physicalDevice, imageFormat,
@@ -1750,7 +1754,7 @@ class HelloTriangleApplication {
     int32_t mipWidth = texWidth;
     int32_t mipHeight = texHeight;
 
-    for (uint32_t i = 1; i < mipLevels; i++) {
+    for (uint32_t i = 1; i < localmipLevels; i++) {
       barrier.subresourceRange.baseMipLevel = i - 1;
       barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
       barrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
@@ -1792,7 +1796,7 @@ class HelloTriangleApplication {
       if (mipWidth > 1) mipWidth /= 2;
       if (mipHeight > 1) mipHeight /= 2;
     }
-    barrier.subresourceRange.baseMipLevel = mipLevels - 1;
+    barrier.subresourceRange.baseMipLevel = localmipLevels - 1;
     barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
     barrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
     barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
@@ -1956,6 +1960,6 @@ int main() {
     std::cerr << e.what() << std::endl;
     return EXIT_FAILURE;
   }
-
+  spdlog::info("Welcome to spdlog!");
   return EXIT_SUCCESS;
 }
