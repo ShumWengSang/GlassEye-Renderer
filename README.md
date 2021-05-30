@@ -1,25 +1,26 @@
 # GlassEye-Renderer
 
-My own implementation of a Vulkan renderer. I hope to bring this to a multithreaded game engine someday.
+My own implementation of a Engine using a Vulkan renderer. 
+
+The project is managed through CMake, and the engine is split from the sandbox application as a library.
 
 # Requirements
 
-> \>= CMake 3.17 C++ 20 (project uses MSVC with CLion)
+> \>= CMake 3.17 C++ 17 (project uses MSVC with CLion)
 
 # Dependancies
 
-~~Uses C++ 20. MSVC currently supports the most C++ 20 features out of all compilers~~
-Reverted to C++17 as C++ 20 support is not mature enough.
 
-## All of these libraries are embedded into the project for stability
+## The following third party libraries are submoduled
 
 - ENTT
+- imgui_entt_entity_editor
 - GLM
-- STBI (texture loading)
+- STB (texture loading)
 - Tiny Obj Loader (obj loading)
 - GLFW
-- Luna SDK (Vulkan)
 - ImGui
+- spdlog
 
 ## You will need to download these yourself
 

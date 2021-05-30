@@ -1,0 +1,27 @@
+[submodule "External/entt"]
+	path = External/entt
+	url = https://github.com/ShumWengSang/entt.git
+[submodule "External/imgui_entt_entity_editor"]
+	path = External/imgui_entt_entity_editor
+	url = https://github.com/ShumWengSang/imgui_entt_entity_editor.git
+[submodule "External/glm"]
+	path = External/glm
+	url = https://github.com/ShumWengSang/glm.git
+[submodule "External/stb"]
+	path = External/stb
+	url = https://github.com/ShumWengSang/stb.git
+[submodule "External/imgui"]
+	path = External/imgui
+	url = https://github.com/ShumWengSang/imgui.git
+[submodule "External/glfw"]
+	path = External/glfw
+	url = https://github.com/ShumWengSang/glfw.git
+[submodule "External/tinyobjloader"]
+	path = External/tinyobjloader
+	url = https://github.com/ShumWengSang/tinyobjloader.git
+[submodule "External/spdlog"]
+	path = External/spdlog
+	url = https://github.com/ShumWengSang/spdlog.git
+[submodule "External/imgui-filebrowser"]
+	path = External/imgui-filebrowser
+	url = https://github.com/ShumWengSang/imgui-filebrowser.git

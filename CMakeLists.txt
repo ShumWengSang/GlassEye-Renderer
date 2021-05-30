@@ -1,70 +1,86 @@
+# Modified From FlingEngine https://github.com/flingengine/FlingEngine
 cmake_minimum_required(VERSION 3.17)
+project("GlassEyeEngine")
 
-set(PROJECT_NAME GlassEye)
+set ( GLASSEYE_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}" )
 
-project(${PROJECT_NAME})
+OPTION( DEFINE_SHIPPING "DEFINE_SHIPPING configuration will change asset paths to be relative." OFF ) # disabled by default
+OPTION( WITH_IMGUI_FLAG "WITH_IMGUI_FLAG will enable or disable the addition of IMGUI to the rendering pipeline. " ON )
+OPTION( WITH_EDITOR_FLAG "Enables or disables the editor in the Fling Engine!" ON )
 
-set(CMAKE_CXX_STANDARD 17)
-
-add_subdirectory(Source/deps/)
-
-file(GLOB SOURCES "Source/src/*.c" "Source/src/*.cpp")
-# Remove the stdafx from the glob
-list(REMOVE_ITEM SOURCES "${CMAKE_SOURCE_DIR}/Source/src/stdafx.cpp")
-
-# Glob the imple for imgui
-# file(GLOB EXT_SOURCES "Source/externalSrc/*.c" "Source/externalSrc/*.cpp" "Source/externalSrc/*.hpp")
-
-# We sometimes want to compile files as both C++ and GLASL.
-# This allows us to access files from the shader directory.
-file(GLOB SHADER_CROSS_SOURCES "Assets/Shaders/*.h")
-
-add_executable(${PROJECT_NAME} ${SOURCES} ${SHADER_CROSS_SOURCES} ${EXT_SOURCES})
-
-source_group("Source" FILES ${SOURCES})
-source_group("Cross Shaders" FILES ${SHADER_CROSS_SOURCES})
-
-target_include_directories(${PROJECT_NAME} PRIVATE "Source/src/")
-target_include_directories(${PROJECT_NAME} PRIVATE "Source/externalSrc/")
-target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/Source/deps/stb_image/include")
-target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/Source/deps/tinyobjloader/include")
-
-
-target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
-target_link_libraries(${PROJECT_NAME} PRIVATE stb_image)
-target_link_libraries(${PROJECT_NAME} PRIVATE glm_static)
-target_link_libraries(${PROJECT_NAME} PRIVATE tinyobjloader)
-
-# Vulkan: Find it first with find_package. If not found, look in internal directories
-find_package(Vulkan)
-IF (NOT Vulkan_FOUND)
-    if (WIN32)
-        find_library(Vulkan_LIBRARY NAMES vulkan-1 vulkan PATHS ${CMAKE_SOURCE_DIR}/Source/externalSrc/vulkan)
-    ELSEIF (LINUX)
-        find_library(Vulkan_LIBRARY NAMES vulkan HINTS "$ENV{VULKAN_SDK}/lib" "${CMAKE_SOURCE_DIR}/libs/vulkan" REQUIRED)
-    ELSE ()
-        message("Error! Can't find Vulkan!")
-    ENDIF ()
-    IF (Vulkan_LIBRARY)
-        set(Vulkan_FOUND ON)
-        MESSAGE("Using bundled Vulkan library version")
-    ENDIF ()
-ENDIF ()
-target_link_libraries(${PROJECT_NAME} PRIVATE Vulkan::Vulkan)
-
-# spdlog
-find_package(spdlog REQUIRED)
-target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog)
-
-if(MSVC)
-    target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
-else()
-    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic -Werror)
+# We can't have the editor without ImGUI!
+IF( NOT WITH_IMGUI_FLAG AND WITH_EDITOR_FLAG )
+    SET( WITH_EDITOR_FLAG OFF )
+    message( FATAL_ERROR    "WITH_EDITOR_FLAG cannot be enabled because WITH_IMGUI_FLAG is OFF!" )
 endif()
 
-# Precompiled header
-target_precompile_headers(${PROJECT_NAME} PRIVATE "Source/src/stdafx.cpp")
+message( STATUS "----- Build Config ----" )
+message( STATUS "Compiler=${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}" )
+message( STATUS "WITH_EDITOR_FLAG=${WITH_EDITOR_FLAG}" )
+message( STATUS "WITH_IMGUI_FLAG=${WITH_IMGUI_FLAG}" )
+message( STATUS "DEFINE_SHIPPING=${DEFINE_SHIPPING}" )
 
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Assets $<TARGET_FILE_DIR:${PROJECT_NAME}>/Assets
-        )
+IF( WITH_IMGUI_FLAG )
+    ADD_DEFINITIONS ( -DWITH_IMGUI=1 )
+else()
+    ADD_DEFINITIONS ( -DWITH_IMGUI=0 )
+endif()
+
+IF( WITH_EDITOR_FLAG )
+    ADD_DEFINITIONS ( -DWITH_EDITOR=1 )
+else()
+    ADD_DEFINITIONS ( -DWITH_EDITOR=0 )
+endif()
+
+IF( DEFINE_SHIPPING )
+    message( STATUS "Build set to SHIPPING configuration!" )
+    ADD_DEFINITIONS ( -DFLING_SHIPPING )
+    SET( CMAKE_BUILD_TYPE Release )
+ENDIF( DEFINE_SHIPPING )
+message( STATUS "-----------------------" )
+
+# C++ 17 Standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Generated folder used for Cmake generated files
+set( GENERATED_INC_FOLDER ${CMAKE_BINARY_DIR}/Generated )
+message( STATUS "Generated dir: ${GENERATED_INC_FOLDER}" )
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/CMakeResources")
+include(EngineInclude)
+
+message( STATUS "Cmake mod path: " ${CMAKE_MODULE_PATH} )
+
+CONFIGURE_PLATFORM_ANNOYING_WARNINGS()
+
+# Enable multiple processor compilation
+if( MSVC )
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+endif()
+
+# Include external libraries
+add_subdirectory( External/glfw )
+include_directories( External/glfw/include )
+
+if( WITH_IMGUI_FLAG )
+    add_subdirectory( External/imgui )
+    include_directories( External/imgui )
+    include_directories( External/imgui_entt_entity_editor )
+endif()
+
+include_directories( External/glm )
+include_directories( External/spdlog/include )
+include_directories( External/entt/src )
+include_directories( External/stb )
+include_directories( External/tinyobjloader )
+include_directories( External/imgui-filebrowser )
+
+
+
+# Add the engine and executable
+add_subdirectory ( "GlassEyeEngine" )
+add_subdirectory ( "Sandbox" )
+
+
