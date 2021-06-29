@@ -3,7 +3,7 @@
 //
 
 /* Start Header -------------------------------------------------------
- * File Name: HelloTriangleApplication.cpp.cc
+ * File Name: HelloTriangleApplication.cpp
  * Purpose: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  * Language: C++, G++
  * Platform: g++ (Ubuntu 9.3.0-10ubuntu2) 9.3, ThinkPad T430u, Nvidia GT 620M,
@@ -12,9 +12,10 @@
  * Author: Roland Shum, roland.shum@digipen.edu
  * Creation date: 5/28/2021
  * End Header --------------------------------------------------------*/
+#include "EnginePCH.h"
 #include "HelloTriangleApplication.h"
 #include "SystemIncludes.h"
-
+#include "Platform.h"
 
 
 
@@ -353,8 +354,15 @@ class LocalHelloTriangleApplication {
     UNREFERENCED_PARAMETER(pUserData);
     UNREFERENCED_PARAMETER(messageType);
     if (messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
-      // Message is important enough to show
-      std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
+      // If it is a loaderAddLayerProperty error, we ignore since that is caused
+      // by my Vulkan SDK being ahead in version compared to the driver.
+      const char *loaderErrorStr = "loaderAddLayerProperties";
+      // If we can't find substring
+      if (strstr(pCallbackData->pMessage, loaderErrorStr) == NULL) {
+        // Message is important enough to show
+        std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
+        GLASSEYE_BREAK();
+      }
     }
 
     return VK_FALSE;

@@ -6,13 +6,18 @@
 #define GLASSEYEENGINE_GLASSEYEENGINE_PLATFORM_PLATFORM_H_
 
 #ifdef _DEBUG
- #define GLASSEYE_DEBUG
+#define GLASSEYE_DEBUG
+#endif
+#ifndef NDEBUG
+#ifndef GLASSEYE_DEBUG
+#define GLASSEYE_DEBUG
+#endif
 #endif
 #ifdef _WIN32
 
-#define GLASSEYE_APPLE			0
-#define GLASSEYE_WINDOWS		1
-#define GLASSEYE_LINUX			0
+#define GLASSEYE_APPLE            0
+#define GLASSEYE_WINDOWS        1
+#define GLASSEYE_LINUX            0
 
 #include "PlatformWindows.h"
 

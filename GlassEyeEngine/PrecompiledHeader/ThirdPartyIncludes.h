@@ -7,7 +7,7 @@ Third Party Libs Include (Part of PCH!)
 
 // This ignores all warnings raised inside External headers
 #pragma warning(push, 0)
-#define GLFW_INCLUDE_VULKAN
+#include <vulkan/vulkan.hpp>
 #include <GLFW/glfw3.h>
 
 #define GLM_ENABLE_EXPERIMENTAL
@@ -25,5 +25,8 @@ Third Party Libs Include (Part of PCH!)
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 
+#include <entt/entt.hpp>
 #include <entt/entity/registry.hpp>
+
+#include <yaml-cpp/yaml.h>
 #pragma warning(pop)

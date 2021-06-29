@@ -37,6 +37,7 @@ GLASSEYE_ENGINE_INCLUDE("")
 ########### Linking ############################################
 find_package(Vulkan REQUIRED)
 
+
 ## Ensure we have Vulkan
 if(Vulkan_FOUND)
     message(STATUS "Vulkan found!" )
@@ -70,8 +71,8 @@ else()
     set ( MY_COMPILER_FLAGS "-Wall -Wno-reorder -Wno-unknown-pragmas -Wno-multichar -Wno-missing-braces" )
 endif()
 
-set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MY_COMPILER_FLAGS}" )
-
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MY_COMPILER_FLAGS}")
+message(STATUS "Generated Inc Folder is : " ${GENERATED_INC_FOLDER})
 ### Setup visual studio source groups / filters ###
 file( GLOB_RECURSE source_list
         *.cpp* src/*.h* src/*.hpp* *.h* ${GENERATED_INC_FOLDER}/*.h ${GENERATED_INC_FOLDER}/*.cpp *.inl

@@ -19,6 +19,14 @@ Std Libs Include (Part of PCH!)
 #include <vector>
 #include <chrono>
 #include <memory>
+#include <sstream>
+#include <assert.h>
+#include <tuple>
+#include <filesystem>
+#include <thread>
+
+// Maybe this is an msvc only thing?
+#include <compare>
 
 /*
 ==============================================

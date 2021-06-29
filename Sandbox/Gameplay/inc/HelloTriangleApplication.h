@@ -21,7 +21,8 @@
 namespace Sandbox {
 class HelloTriangleApplication : public GlassEye::App {
  public:
-  virtual void Init(entt::registry&);
+  HelloTriangleApplication();
+  virtual void Init(entt::registry &);
   virtual void Shutdown(entt::registry&);
   virtual void Update(entt::registry&, float dt);
 

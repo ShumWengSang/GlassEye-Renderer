@@ -1,17 +1,12 @@
+#include "EnginePCH.h"
+#include "Engine.h"
+#include "Engine.inl"
+
 #include "HelloTriangleApplication.h"
 
-int main(){
-  entt::registry registry;
+int main() {
+  GlassEye::Engine engine;
 
-  Sandbox::HelloTriangleApplication app;
+  engine.Run<Sandbox::HelloTriangleApplication>();
 
-  try
-  {
-    app.Init(registry);
-    app.Update(registry, 0.16f);
-    app.Shutdown(registry);
-  }
-  catch (const std::exception& e) {
-
-  }
 }

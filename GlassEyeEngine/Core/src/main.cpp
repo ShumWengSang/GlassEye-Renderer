@@ -210,7 +210,7 @@
 //  }
 //
 //  void createInstance() {
-//    if (enableValidationLayers && !checkValidationLayerSupport()) {
+//    if (enableValidationLayers && !CheckValidationLayerSupport()) {
 //      throw std::runtime_error(
 //          "validation layers requested, but not available!");
 //    }
@@ -275,7 +275,7 @@
 //    }
 //  }
 //
-//  bool checkValidationLayerSupport() {
+//  bool CheckValidationLayerSupport() {
 //    uint32_t layerCount;
 //    vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 //

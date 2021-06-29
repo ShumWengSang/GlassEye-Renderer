@@ -1,28 +1,26 @@
 //
-// Created by user on 5/28/2021.
+// Created by user on 6/15/2021.
 //
 
 /* Start Header -------------------------------------------------------
- * File Name: App.cpp.cc
+ * File Name: Window.cpp
  * Purpose: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  * Language: C++, G++
  * Platform: g++ (Ubuntu 9.3.0-10ubuntu2) 9.3, ThinkPad T430u, Nvidia GT 620M,
  *           OpenGL version string: 4.6.0 NVIDIA 390.138
  * Project: GlassEyeEngine
  * Author: Roland Shum, roland.shum@digipen.edu
- * Creation date: 5/28/2021
+ * Creation date: 6/15/2021
  * End Header --------------------------------------------------------*/
 #include "EnginePCH.h"
-#include "App.h"
 #include "Window.h"
-bool GlassEye::App::WantsToQuit() const {
-  return wantsToQuit;
+
+GlassEye::WindowProperties::WindowProperties(std::string title,
+                                             uint32 width,
+                                             uint32 height,
+                                             bool fullscreen)
+    : Title(title), Width(width), Height(height), Fullscreen(fullscreen) {}
+
+GlassEye::Window::~Window() {
+
 }
-GlassEye::App::App(const GlassEye::ApplicationSpecification &specs) {
-
-  Window_ = std::unique_ptr<Window>(Window::Create(specs.windowPropertis));
-  if (!specs.WorkingDirectory.empty())
-    std::filesystem::current_path(specs.WorkingDirectory);
-
-}
-

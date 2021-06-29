@@ -18,8 +18,8 @@ MACRO(GLASSEYE_ENGINE_INCLUDE EngineDir)
     # Set Build Dir
     set( CMAKE_BINARY_DIR    "/build" )
     set_property( GLOBAL PROPERTY USE_FOLDERS ON )
-    set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/_Output/$<CONFIG> )
-    set( CMAKE_CXX_STANDARD 17 )
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/_Output/$<CONFIG>)
+    set(CMAKE_CXX_STANDARD 20)
 
     # Sets the output directory
     set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin" )
@@ -32,6 +32,7 @@ MACRO(GLASSEYE_ENGINE_INCLUDE EngineDir)
             ${EngineDir}Utils/inc
             ${EngineDir}Platform/inc
             ${EngineDir}Gameplay/inc
+            ${EngineDir}Asset/inc
             ${EngineDir}PrecompiledHeader
             ${GENERATED_INC_FOLDER}		# Generated include files that cmake will handle (i.e. GitVersion)
     )

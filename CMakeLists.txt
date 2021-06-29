@@ -40,7 +40,7 @@ ENDIF( DEFINE_SHIPPING )
 message( STATUS "-----------------------" )
 
 # C++ 17 Standard
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Generated folder used for Cmake generated files
@@ -66,21 +66,22 @@ include_directories( External/glfw/include )
 
 if( WITH_IMGUI_FLAG )
     add_subdirectory( External/imgui )
-    include_directories( External/imgui )
-    include_directories( External/imgui_entt_entity_editor )
-endif()
+    include_directories(External/imgui)
+    include_directories(External/imgui_entt_entity_editor)
+endif ()
 
-include_directories( External/glm )
-include_directories( External/spdlog/include )
-include_directories( External/entt/src )
-include_directories( External/stb )
-include_directories( External/tinyobjloader )
-include_directories( External/imgui-filebrowser )
-
+include_directories(External/glm)
+include_directories(External/spdlog/include)
+include_directories(External/entt/src)
+include_directories(External/stb)
+include_directories(External/tinyobjloader)
+include_directories(External/imgui-filebrowser)
+include_directories(External/yaml-cpp/include)
+add_subdirectory(External/yaml-cpp)
 
 
 # Add the engine and executable
-add_subdirectory ( "GlassEyeEngine" )
-add_subdirectory ( "Sandbox" )
+add_subdirectory("GlassEyeEngine")
+add_subdirectory("Sandbox")
 
 
